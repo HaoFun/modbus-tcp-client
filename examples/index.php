@@ -51,9 +51,15 @@ try {
 
         $highByteAsInt = $word->getHighByteAsInt();
         $lowByteAsInt = $word->getLowByteAsInt();
+        try {
+            $UInt64 = $quadWord->getUInt64(); // some data can not be converted to unsigned 64bit int due PHP memory limitations
+        } catch (Exception $e) {
+            $UInt64 = '-';
+        }
+
         $result[$address] = [
-            'highByte' => '0x' . str_pad(dechex($highByteAsInt), 2, '0') . ' / ' . $highByteAsInt,
-            'lowByte' => '0x' . str_pad(dechex($lowByteAsInt), 2, '0') . ' / ' . $lowByteAsInt,
+            'highByte' => '0x' . str_pad(dechex($highByteAsInt), 2, '0') . ' / ' . $highByteAsInt . ' / &#' . $highByteAsInt . ';',
+            'lowByte' => '0x' . str_pad(dechex($lowByteAsInt), 2, '0') . ' / ' . $lowByteAsInt . ' / &#' . $lowByteAsInt . ';',
             'highByteBits' => sprintf('%08d', decbin($highByteAsInt)),
             'lowByteBits' => sprintf('%08d', decbin($lowByteAsInt)),
             'UInt16' => $word->getUInt16(),
@@ -61,7 +67,7 @@ try {
             'UInt32' => $doubleWord ? $doubleWord->getUInt32() : null,
             'int32' => $doubleWord ? $doubleWord->getInt32() : null,
             'float' => $doubleWord ? $doubleWord->getFloat() : null,
-            'UInt64' => $quadWord ? $quadWord->getUInt64() : null,
+            'UInt64' => $quadWord ? $UInt64 : null,
         ];
     }
 
